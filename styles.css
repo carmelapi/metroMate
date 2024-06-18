@@ -142,7 +142,7 @@ h2 {
 }
 
 /* ------------- Mobile --------- */
-@media only screen and (max-width: 430px) {
+@media (max-width: 768px) {
   .section__values {
     display: flex;
     flex-direction: column;
