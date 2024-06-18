@@ -154,7 +154,7 @@ async function getData(lineValue, walkingTimeValue) {
 
     // different conditions to display the color of the alert
     // Red
-    if (trainMinutes > walkingTime) {
+    if (trainMinutes < walkingTime) {
       alertSquare.style.backgroundColor = "#ff0000";
 
       alertMessage.innerHTML = "Now is not the time!!";
@@ -168,7 +168,7 @@ async function getData(lineValue, walkingTimeValue) {
       alertSquare.appendChild(alertMessage);
 
       // Green
-    } else {
+    } else if (trainMinutes > "00:" + (walkingTimeValue + 2) + ":00") {
       alertSquare.style.backgroundColor = "#00ff75";
       alertSquare.style.color = "#000E31";
 

@@ -116,7 +116,7 @@ h2 {
     grid-area: 1 / 1 / 2 / 4;
     border-radius: 16px;
     border: 2px solid #ffffff;
-
+    padding: 1rem;
     color: var(--dark-color);
     display: flex;
     align-items: center;
