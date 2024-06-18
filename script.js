@@ -168,7 +168,7 @@ async function getData(lineValue, walkingTimeValue) {
       alertSquare.appendChild(alertMessage);
 
       // Green
-    } else if (trainMinutes < "00:" + (walkingTimeValue + 2) + ":00") {
+    } else {
       alertSquare.style.backgroundColor = "#00ff75";
       alertSquare.style.color = "#000E31";
 
