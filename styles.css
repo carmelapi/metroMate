@@ -72,7 +72,7 @@ h2 {
     font-size: 1.25rem;
     padding-bottom: 0.5rem;
     font-family: "DigitalNumbers", sans-serif;
-    width: 5rem;
+    width: 50%;
     text-align: center;
     color: var(--yellow-color);
   }

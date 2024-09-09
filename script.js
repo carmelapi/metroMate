@@ -1,10 +1,15 @@
 // -----------------------------DEFINE VARIABLES---------------------------------------
 // Select element from DOM
-let inputBtn = document.querySelector(".section__input .input__btn");
 let modale = document.querySelector(".modale");
+let inputStation = document.querySelector("#input--station");
+let inputLine = document.querySelector("#input--line");
+let inputWalkingTime = document.querySelector(".input--walkingTime");
+let inputBtn = document.querySelector(".section__input .input__btn");
 let values = document.querySelector(".section__values");
+let valueStation = document.querySelector("#input--station");
 let valueLine = document.querySelector(".value--line");
 let valueWalkingTime = document.querySelector(".value--walking-time");
+
 let selectDirection = document.querySelector(".select--direction");
 let alertSection = document.querySelector(".alert");
 let alertSquare = document.querySelector(".alert__square");
@@ -14,51 +19,108 @@ let alertMessage = document.querySelector(".message");
 let alertNextTrain = document.querySelector(".nextTrain");
 
 // Set global variable
-let trains = [];
+let url;
+let stationList = {};
+let stationId;
+let stationName;
+let stationLine;
+
 let resultExpected = [];
 let selectedOptionValue;
 let currentTime;
 let expectedTime;
 
-// --------------------------------------------------------------------
-async function getData(lineValue, walkingTimeValue) {
-  // Extrapolate hours and minutes of NewData
-  const date = new Date();
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const seconds = ("0" + date.getSeconds()).slice(-2);
-  currentTime = `${hours}:${minutes}:${seconds}`;
+let trains = [];
+
+// Extrapolate hours and minutes of NewData
+const date = new Date();
+const hours = date.getHours();
+const minutes = date.getMinutes();
+const seconds = ("0" + date.getSeconds()).slice(-2);
+currentTime = `${hours}:${minutes}:${seconds}`;
+
+// -----------------------------FETCH STATION LIST---------------------------------------
+async function fetchStationList() {
+  try {
+    const response = await fetch("/SL.json");
+    const data = await response.json();
+    const stationList = data.map((station) => ({
+      name: station.name,
+      id: station.id,
+    }));
+
+    // Use stationList here
+    getStationUrl(stationList);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+fetchStationList();
+
+// -----------------------------GET DATA FUNCTION---------------------------------------
+function getStationUrl(params) {
+  const dataList = document.querySelector("#stations");
+
+  params.forEach((station) => {
+    const option = document.createElement("option");
+    option.value = station.name;
+    dataList.appendChild(option);
+  });
+
+  inputStation.addEventListener("input", () => {
+    if (inputStation.value) {
+      inputLine.removeAttribute("disabled");
+      inputWalkingTime.removeAttribute("disabled");
+    }
+  });
 
   inputBtn.addEventListener("click", () => {
-    // Get values of the inputs
-    let lineValue = document.querySelector(".input--line").value;
-    let walkingTimeValue = document.querySelector(".input--walkingTime").value;
+    stationName = inputStation.value;
+    stationLine = inputLine.value;
+    walkingTime = inputWalkingTime.value;
 
-    if (walkingTimeValue.length === 1) {
-      walkingTimeValue = `0${walkingTimeValue}`;
-    }
+    params.find((station) => {
+      if (station.name === stationName) {
+        stationId = station.id;
+      }
+    });
+
+    url = `https://transport.integration.sl.se/v1/sites/${stationId}/departures?transport=METRO&line=${stationLine}`;
+
+    // let test = {
+    //   url: url,
+    //   name: stationName,
+    //   line: stationLine,
+    //   id: stationId,
+    //   walking: walkingTime,
+    // };
+    // console.log(test);
 
     // Show the values in html
-    let showLine = document.createElement("h2");
-    showLine.innerHTML = lineValue;
-    valueLine.appendChild(showLine);
+    if (walkingTime.length === 1) {
+      walkingTime = `0${walkingTime}`;
+    }
     let showWalkingTime = document.createElement("h2");
-    showWalkingTime.innerHTML = walkingTimeValue;
+    showWalkingTime.innerText = walkingTime;
     valueWalkingTime.appendChild(showWalkingTime);
+
+    let showLine = document.createElement("h2");
+    showLine.innerText = stationLine;
+    valueLine.appendChild(showLine);
 
     // Hide modale and show values
     modale.style.display = "none";
     values.style.visibility = "visible";
 
-    // Pass values to getData function
-    getData(lineValue, walkingTimeValue);
+    getData(url);
   });
-
-  // GET DATA API
-  let url = `https://transport.integration.sl.se/v1/sites/1002/departures?transport=METRO&line=${lineValue}&forecast=60`;
+}
+// -----------------------------GET DATA FUNCTION---------------------------------------
+async function getData(url) {
+  console.log(url);
   const response = await fetch(url);
   const result = await response.json();
-  // console.log("result", result);
+  console.log("result", result);
 
   // Create option in direction
   let mapDirection = [
@@ -77,7 +139,7 @@ async function getData(lineValue, walkingTimeValue) {
     alertSection.style.visibility = "visible";
   });
 
-  // create a new array with the elements that have the destination - as "Fruängen"
+  // create a new array with the elements that have the destination
   function getExpectedTime(selectedOptionValue) {
     // Filter trains for directions
     trains = result.departures.filter(
@@ -129,24 +191,18 @@ async function getData(lineValue, walkingTimeValue) {
     // Calculate the difference between expected time and newData
     let trainMinutes = subtractTimes(trainsSchedule[0], currentTime);
 
-    // Create an array with the time of the train and the minutes to walk
-    let walkingTime = "00:" + walkingTimeValue + ":00";
-
-    // ----------------- CODE LOGIC -----------------
+    let walking = "00:" + walkingTime + ":00";
     console.log("trainMinutes", trainMinutes);
+    console.log("walking", walking);
+    // ----------------- CODE LOGIC -----------------
 
-    console.log("walkingTime", walkingTime);
-
-    const arr = trainMinutes.split(":").slice(1);
-    console.log("arr2", arr);
-
-    // Messages to display of the current train
+    //  Messages to display of the current train
     let textDisplay = document.createElement("h2");
-    textDisplay.innerHTML = `${trainMinutes} min`;
+    textDisplay.innerText = `${trainMinutes} min`;
     alertDisplay.appendChild(textDisplay);
     // Messages to display of the next train
     let textNextTrain = document.createElement("h2");
-    textNextTrain.innerHTML = `${subtractTimes(
+    textNextTrain.innerText = `${subtractTimes(
       trainsSchedule[1],
       currentTime
     )} min`;
@@ -154,31 +210,30 @@ async function getData(lineValue, walkingTimeValue) {
 
     // different conditions to display the color of the alert
     // Red
-    if (trainMinutes < walkingTime) {
+    if (trainMinutes < walking) {
       alertSquare.style.backgroundColor = "#ff0000";
 
-      alertMessage.innerHTML = "Now is not the time!!";
+      alertMessage.innerText = "Now is not the time!!";
       alertSquare.appendChild(alertMessage);
 
       // Yellow
-    } else if (trainMinutes === walkingTime) {
+    } else if (trainMinutes === walking) {
       alertSquare.style.backgroundColor = "#fff500";
 
-      alertMessage.innerHTML = "Hurry! You have to go out now!";
+      alertMessage.innerText = "Hurry! You have to go out now!";
       alertSquare.appendChild(alertMessage);
 
       // Green
-    } else if (trainMinutes > "00:" + (walkingTimeValue + 2) + ":00") {
+    } else if (trainMinutes > "00:" + (walkingTime + 2) + ":00") {
       alertSquare.style.backgroundColor = "#00ff75";
       alertSquare.style.color = "#000E31";
 
-      alertMessage.innerHTML = "You can leave now";
+      alertMessage.innerText = "You can leave now";
     }
   }
-}
 
-// upload the api data to the page every 60 seconds
-getData();
-setInterval(function () {
-  location.reload();
-}, 60000);
+  // -----------------------------UPDATE DATA FUNCTION---------------------------------------
+  setInterval(() => {
+    getExpectedTime(selectedOptionValue);
+  }, 60000);
+}

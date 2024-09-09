@@ -63,12 +63,32 @@
     <section class="section__input">
       <div class="modale">
         <div class="input__container">
-          <label for="line">Line:</label>
-          <input type="number" class="input--line" id="line" />
+          <label for="input--station">Starting point:</label>
+          <input
+            type="text"
+            id="input--station"
+            list="stations"
+            placeholder="Insert station of departure"
+          />
+          <datalist id="stations"> </datalist>
+        </div>
+        <div class="input__container">
+          <label for="input--line">Metro line:</label>
+          <input
+            type="number"
+            id="input--line"
+            placeholder="Enter the line number"
+            disabled
+          />
         </div>
         <div class="input__container">
           <label for="walkingTime">Walking time:</label>
-          <input type="number" class="input--walkingTime" id="walkingTime" />
+          <input
+            type="number"
+            class="input--walkingTime"
+            id="walkingTime"
+            disabled
+          />
           <h2>min</h2>
         </div>
 
