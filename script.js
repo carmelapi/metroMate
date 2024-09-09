@@ -231,9 +231,4 @@ async function getData(url) {
       alertMessage.innerText = "You can leave now";
     }
   }
-
-  // -----------------------------UPDATE DATA FUNCTION---------------------------------------
-  setInterval(() => {
-    getExpectedTime(selectedOptionValue);
-  }, 60000);
 }
