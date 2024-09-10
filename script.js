@@ -5,6 +5,7 @@ let inputStation = document.querySelector("#input--station");
 let inputLine = document.querySelector("#input--line");
 let inputWalkingTime = document.querySelector(".input--walkingTime");
 let inputBtn = document.querySelector(".section__input .input__btn");
+let autocompleteList = document.querySelector("#autocomplete-list");
 let values = document.querySelector(".section__values");
 let valueStation = document.querySelector("#input--station");
 let valueLine = document.querySelector(".value--line");
@@ -55,22 +56,40 @@ async function fetchStationList() {
     console.error("Error:", error);
   }
 }
+
 fetchStationList();
 
 // -----------------------------GET DATA FUNCTION---------------------------------------
 function getStationUrl(params) {
-  const dataList = document.querySelector("#stations");
-
-  params.forEach((station) => {
-    const option = document.createElement("option");
-    option.value = station.name;
-    dataList.appendChild(option);
-  });
-
   inputStation.addEventListener("input", () => {
+    // Enable inputLine and inputWalkingTime
     if (inputStation.value) {
       inputLine.removeAttribute("disabled");
       inputWalkingTime.removeAttribute("disabled");
+    }
+
+    const inputValue = inputStation.value.toLowerCase();
+    autocompleteList.innerHTML = "";
+    if (inputValue) {
+      // Filtra le stazioni che corrispondono al valore inserito
+      const filteredStations = params.filter((station) =>
+        station.name.toLowerCase().startsWith(inputValue)
+      );
+
+      filteredStations.forEach((station) => {
+        const suggestionItem = document.createElement("div");
+        suggestionItem.classList.add("suggestion");
+        suggestionItem.textContent = station.name;
+        suggestionItem.dataset.id = station.id;
+
+        // Aggiungi evento click per selezionare un'opzione
+        suggestionItem.addEventListener("click", function () {
+          inputStation.value = station.name;
+          autocompleteList.innerHTML = ""; // Nasconde la lista dopo la selezione
+        });
+
+        autocompleteList.appendChild(suggestionItem);
+      });
     }
   });
 

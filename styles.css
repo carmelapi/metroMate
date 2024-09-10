@@ -141,6 +141,25 @@ h2 {
   }
 }
 
+.combobox {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.autocomplete-suggestions {
+  background-color: var(--dark-color);
+  font-size: 1.25rem;
+  overflow: scroll;
+  height: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.autocomplete-suggestion::-webkit-scrollbar {
+  display: none;
+}
+
 /* ------------- Mobile --------- */
 @media (max-width: 768px) {
   .modale {

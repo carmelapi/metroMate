@@ -64,13 +64,14 @@
       <div class="modale">
         <div class="input__container">
           <label for="input--station">Starting point:</label>
-          <input
-            type="text"
-            id="input--station"
-            list="stations"
-            placeholder="Insert station of departure"
-          />
-          <datalist id="stations"> </datalist>
+          <div class="combobox">
+            <input
+              type="text"
+              id="input--station"
+              placeholder="Insert station of departure"
+            />
+            <div id="autocomplete-list" class="autocomplete-suggestions"></div>
+          </div>
         </div>
         <div class="input__container">
           <label for="input--line">Metro line:</label>
