@@ -43,7 +43,7 @@ currentTime = `${hours}:${minutes}:${seconds}`;
 // -----------------------------FETCH STATION LIST---------------------------------------
 async function fetchStationList() {
   try {
-    const response = await fetch("/SL.json");
+    const response = await fetch("./SL.json");
     const data = await response.json();
     const stationList = data.map((station) => ({
       name: station.name,
