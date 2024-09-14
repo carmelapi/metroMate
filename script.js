@@ -40,10 +40,14 @@ const minutes = date.getMinutes();
 const seconds = ("0" + date.getSeconds()).slice(-2);
 currentTime = `${hours}:${minutes}:${seconds}`;
 
+const API_BASE = `https://ngrok.kopiro.me/sl`; // proxy only used to avoid CORS
+const API_BASE_SL = `https://transport.integration.sl.se`;
+
 // -----------------------------FETCH STATION LIST---------------------------------------
 async function fetchStationList() {
   try {
-    const response = await fetch("/SL.json");
+    let url = `${API_BASE}/v1/sites`;
+    const response = await fetch(url);
     const data = await response.json();
     const stationList = data.map((station) => ({
       name: station.name,
