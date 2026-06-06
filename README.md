@@ -1,24 +1,22 @@
-# Usage
+# MetroMate 🚇
 
-**To use the application:**
-1. Enter a line value and a walking time value in the input fields
-2. Click the submit button
-3. The application will display the entered values back to you
+Never miss your metro again!
+
+MetroMate calculates when you need to leave home based 
+on your walking distance to the metro station, 
+so you always catch your train on time.
+
+## How it works
+
+1. Enter your metro line
+2. Enter your walking time to the station
+3. MetroMate tells you exactly when to leave home
 
 ## Built With
-- JavaScript
+
+- JavaScript (vanilla)
 - HTML
 - CSS
 
-
-
-## Authors
-
-- Carmela Pippa
-
-
-
-## Acknowledgments
-- Hat tip to anyone whose code was used
-- Inspiration
-- etc
+## Author
+Carmela Pippa — [carmelapippa.netlify.app](https://carmelapippa.netlify.app)
